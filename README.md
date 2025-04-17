@@ -1,6 +1,6 @@
 # Discord Slash Command Bot Template (discord-py-interactions)
 
-A quickstart template for building a modular Discord bot using slash commands with [`discord-py-interactions`](https://github.com/goverfl0w/discord-interactions).
+A minimal and modular Discord bot template using slash commands powered by [`discord-py-interactions`](https://github.com/goverfl0w/discord-interactions). Designed for quick setup, easy development, and clean command organization.
 
 ## ✨ Features
 
@@ -29,7 +29,7 @@ discord_bot_template/
 │   └── ...                  # Your custom commands!
 ├── .gitignore               # Excludes specified files in Git
 ├── .env                     # Environment variables (e.g., token)
-├── bot_instance.py          # Loads bot token and other secrets from .env
+├── bot_instance.py          # Creates bot intance and loads credentials from the .env file
 ├── command_controller.py    # Loads all commands from the 'commands' folder
 ├── main.py                  # Main entry point for the bot
 └── README.md                # You are here!
@@ -59,6 +59,64 @@ discord_bot_template/
    ```bash
    python main.py
    ```
+
+## ➕ Adding a new Command
+
+To add a new slash command to your bot:
+
+1. Create a new `.py` file in the `commands/` directory. Each file should contain one or more related commands.
+2. Import the bot instance from `bot_instance.py`. This is important because it’s the central instance that registers all commands.
+
+## 🏓 Example: `ping.py`
+
+```python
+from interactions import CommandContext
+from bot_instance import bot
+
+@bot.command(
+    name="ping",
+    description="Check the bot's latency",
+)
+async def ping(ctx: CommandContext):
+    latency = round(bot.latency)
+    await ctx.send(f"🏓 Pong! Latency: `{latency}ms`")
+```
+
+### **🧑‍💻 Code Breakdown**
+
+`from interactions import CommandContext`
+- Imports the `CommandContext` class, which provides information about the command invocation (e.g., user, channel) and allows the bot to send responses using methods like `ctx.send()`.
+
+---
+
+`from bot_instance import bot`
+- Imports the bot instance defined elsewhere in your project. This instance is used to register commands and interact with Discord’s API.
+
+---
+
+`@bot.command(...)`
+- Registers a new slash command with the bot.  
+  - `name="ping"` sets the command name to `/ping`.  
+  - `description="Check the bot's latency"` helps users understand what the command does in Discord's interface.
+
+---
+
+`async def ping(ctx: CommandContext):`
+- Defines the async function that runs when a user executes `/ping`. It takes in the command context (`ctx`), which allows the bot to access details of the interaction and reply to the user.
+
+---
+
+`latency = round(bot.latency)`
+- Retrieves and rounds the bot’s current latency.  
+  - `bot.latency` returns the WebSocket ping in seconds.  
+  - `round(...)` converts it to a whole number, effectively showing latency in milliseconds.
+
+---
+
+`await ctx.send(...)`
+- Sends a message back to the user with the bot’s current latency, formatted as a friendly "Pong!" response including a ping emoji and the latency in ms.
+
+---
 
 ## 📌 Notes
 - Make sure your bot has the correct permissions and is registered with a slash command application.
